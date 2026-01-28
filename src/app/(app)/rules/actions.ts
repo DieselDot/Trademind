@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { RuleInsert, RuleUpdate } from "@/types/database";
+import type { Rule, RuleInsert, RuleUpdate } from "@/types/database";
 
 export async function getRules() {
   const supabase = await createClient();
@@ -22,7 +22,7 @@ export async function getRules() {
     return { error: error.message, data: null };
   }
 
-  return { error: null, data };
+  return { error: null, data: data as Rule[] };
 }
 
 export async function createRule(rule: Omit<RuleInsert, "user_id">) {
@@ -33,12 +33,14 @@ export async function createRule(rule: Omit<RuleInsert, "user_id">) {
     return { error: "Not authenticated", data: null };
   }
 
+  const insertData: RuleInsert = {
+    ...rule,
+    user_id: user.id,
+  };
+
   const { data, error } = await supabase
     .from("rules")
-    .insert({
-      ...rule,
-      user_id: user.id,
-    })
+    .insert(insertData as any)
     .select()
     .single();
 
@@ -47,7 +49,7 @@ export async function createRule(rule: Omit<RuleInsert, "user_id">) {
   }
 
   revalidatePath("/rules");
-  return { error: null, data };
+  return { error: null, data: data as Rule };
 }
 
 export async function updateRule(id: string, rule: RuleUpdate) {
@@ -60,7 +62,7 @@ export async function updateRule(id: string, rule: RuleUpdate) {
 
   const { data, error } = await supabase
     .from("rules")
-    .update(rule)
+    .update(rule as any)
     .eq("id", id)
     .eq("user_id", user.id)
     .select()
@@ -71,7 +73,7 @@ export async function updateRule(id: string, rule: RuleUpdate) {
   }
 
   revalidatePath("/rules");
-  return { error: null, data };
+  return { error: null, data: data as Rule };
 }
 
 export async function deleteRule(id: string) {

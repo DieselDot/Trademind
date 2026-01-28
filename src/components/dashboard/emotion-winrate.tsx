@@ -102,8 +102,8 @@ export function EmotionWinRate({ data }: EmotionWinRateProps) {
                 }}
                 labelStyle={{ color: "oklch(0.95 0.01 250)", fontWeight: 500 }}
                 itemStyle={{ color: "oklch(0.95 0.01 250)" }}
-                formatter={(value: number, _name: string, props: any) => [
-                  `${value}% (${props.payload.total} trades)`,
+                formatter={(value, _name, props) => [
+                  `${value}% (${(props as any).payload.total} trades)`,
                   "Win Rate",
                 ]}
               />

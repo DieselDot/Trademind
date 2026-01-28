@@ -112,7 +112,7 @@ export function TradeLogger({ sessionId, rules, tradeCount, maxTrades }: TradeLo
     );
   };
 
-  const isAtMaxTrades = maxTrades && tradeCount >= maxTrades;
+  const isAtMaxTrades = !!(maxTrades && tradeCount >= maxTrades);
 
   return (
     <>

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Session, Trade } from "@/types/database";
 
 export async function getDashboardStats() {
   const supabase = await createClient();
@@ -11,7 +12,7 @@ export async function getDashboardStats() {
   }
 
   // Get all completed sessions
-  const { data: sessions, error: sessionsError } = await supabase
+  const { data: sessionsData, error: sessionsError } = await supabase
     .from("sessions")
     .select("*")
     .eq("user_id", user.id)
@@ -22,8 +23,10 @@ export async function getDashboardStats() {
     return { error: sessionsError.message, data: null };
   }
 
+  const sessions = sessionsData as Session[];
+
   // Get all trades for this user
-  const { data: trades, error: tradesError } = await supabase
+  const { data: tradesData, error: tradesError } = await supabase
     .from("trades")
     .select("*")
     .eq("user_id", user.id);
@@ -31,6 +34,8 @@ export async function getDashboardStats() {
   if (tradesError) {
     return { error: tradesError.message, data: null };
   }
+
+  const trades = tradesData as Trade[];
 
   // Get active rules count
   const { count: rulesCount } = await supabase
@@ -45,7 +50,7 @@ export async function getDashboardStats() {
     .select("id")
     .eq("user_id", user.id)
     .eq("status", "active")
-    .single();
+    .single() as { data: { id: string } | null };
 
   // Calculate stats
   const totalSessions = sessions?.length || 0;

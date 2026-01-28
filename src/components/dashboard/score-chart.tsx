@@ -79,7 +79,7 @@ export function ScoreChart({ data, goalScore = 80 }: ScoreChartProps) {
                 }}
                 labelStyle={{ color: "oklch(0.95 0.01 250)", fontWeight: 500 }}
                 itemStyle={{ color: "oklch(0.65 0.2 255)" }}
-                formatter={(value: number) => [`${value}`, "Score"]}
+                formatter={(value) => [`${value}`, "Score"]}
               />
               <ReferenceLine
                 y={goalScore}

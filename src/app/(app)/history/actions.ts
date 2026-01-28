@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Session } from "@/types/database";
 
 export async function getSessionHistory() {
   const supabase = await createClient();
@@ -10,7 +11,7 @@ export async function getSessionHistory() {
     return { error: "Not authenticated", data: null };
   }
 
-  const { data: sessions, error } = await supabase
+  const { data: sessionsData, error } = await supabase
     .from("sessions")
     .select("*")
     .eq("user_id", user.id)
@@ -19,6 +20,8 @@ export async function getSessionHistory() {
   if (error) {
     return { error: error.message, data: null };
   }
+
+  const sessions = sessionsData as Session[];
 
   // Get trade counts for each session
   const sessionIds = sessions?.map((s) => s.id) || [];
@@ -30,7 +33,7 @@ export async function getSessionHistory() {
   const { data: trades } = await supabase
     .from("trades")
     .select("session_id, result, pnl, rules_followed")
-    .in("session_id", sessionIds);
+    .in("session_id", sessionIds) as { data: { session_id: string; result: string; pnl: number | null; rules_followed: boolean }[] | null };
 
   // Aggregate trade data per session
   const tradeStats = trades?.reduce((acc, trade) => {

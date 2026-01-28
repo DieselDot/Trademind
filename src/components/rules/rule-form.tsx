@@ -51,7 +51,7 @@ export function RuleForm({ open, onOpenChange, rule }: RuleFormProps) {
   const isEditing = !!rule;
 
   const form = useForm<RuleInput>({
-    resolver: zodResolver(ruleSchema),
+    resolver: zodResolver(ruleSchema) as any,
     defaultValues: {
       name: rule?.name || "",
       description: rule?.description || "",

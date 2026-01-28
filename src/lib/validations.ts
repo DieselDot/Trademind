@@ -19,7 +19,7 @@ export const ruleSchema = z.object({
   category: z.enum(["risk", "entry", "exit", "timing", "mindset"], {
     message: "Please select a category",
   }),
-  is_active: z.boolean().default(true),
+  is_active: z.boolean().optional().default(true),
 });
 
 // Pre-session validations

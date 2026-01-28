@@ -166,8 +166,8 @@ export function PnlChart({ data }: PnlChartProps) {
                 }}
                 labelStyle={{ color: "oklch(0.95 0.01 250)", fontWeight: 500 }}
                 itemStyle={{ color: "oklch(0.95 0.01 250)" }}
-                formatter={(value: number, name: string) => [
-                  formatCurrency(value),
+                formatter={(value, name) => [
+                  formatCurrency(value as number),
                   name === "cumulativePnl" ? "Cumulative P&L" : "Daily P&L",
                 ]}
               />

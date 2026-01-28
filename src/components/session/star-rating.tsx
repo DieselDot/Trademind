@@ -8,6 +8,7 @@ interface StarRatingProps {
   max?: number;
   label?: string;
   description?: string;
+  required?: boolean;
 }
 
 export function StarRating({
@@ -16,12 +17,16 @@ export function StarRating({
   max = 5,
   label,
   description,
+  required,
 }: StarRatingProps) {
   return (
     <div className="space-y-2">
       {label && (
         <div>
-          <p className="text-sm font-medium">{label}</p>
+          <p className="text-sm font-medium">
+            {label}
+            {required && <span className="text-destructive ml-1">*</span>}
+          </p>
           {description && (
             <p className="text-xs text-muted-foreground">{description}</p>
           )}
