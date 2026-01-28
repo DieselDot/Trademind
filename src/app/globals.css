@@ -1,0 +1,275 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  /* TradeMind custom colors */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}
+
+/*
+  TradeMind Premium Theme
+  Clean, modern, professional trading interface
+*/
+
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.002 247);
+  --foreground: oklch(0.145 0.031 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.031 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.031 265);
+  --primary: oklch(0.623 0.214 259);
+  --primary-foreground: oklch(0.985 0.002 247);
+  --secondary: oklch(0.968 0.007 247);
+  --secondary-foreground: oklch(0.145 0.031 265);
+  --muted: oklch(0.968 0.007 247);
+  --muted-foreground: oklch(0.554 0.046 257);
+  --accent: oklch(0.968 0.007 247);
+  --accent-foreground: oklch(0.145 0.031 265);
+  --destructive: oklch(0.577 0.245 27);
+  --border: oklch(0.929 0.013 255);
+  --input: oklch(0.929 0.013 255);
+  --ring: oklch(0.623 0.214 259);
+  --success: oklch(0.723 0.191 142);
+  --warning: oklch(0.769 0.188 70);
+  --chart-1: oklch(0.623 0.214 259);
+  --chart-2: oklch(0.723 0.191 142);
+  --chart-3: oklch(0.769 0.188 70);
+  --chart-4: oklch(0.577 0.245 27);
+  --chart-5: oklch(0.627 0.265 303);
+  --sidebar: oklch(0.985 0.002 247);
+  --sidebar-foreground: oklch(0.145 0.031 265);
+  --sidebar-primary: oklch(0.623 0.214 259);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247);
+  --sidebar-accent: oklch(0.968 0.007 247);
+  --sidebar-accent-foreground: oklch(0.145 0.031 265);
+  --sidebar-border: oklch(0.929 0.013 255);
+  --sidebar-ring: oklch(0.623 0.214 259);
+}
+
+/* Dark mode - TradeMind premium dark theme */
+.dark {
+  --background: oklch(0.13 0.028 265);
+  --foreground: oklch(0.95 0.01 250);
+  --card: oklch(0.17 0.032 265);
+  --card-foreground: oklch(0.95 0.01 250);
+  --popover: oklch(0.17 0.032 265);
+  --popover-foreground: oklch(0.95 0.01 250);
+  --primary: oklch(0.65 0.2 255);
+  --primary-foreground: oklch(0.98 0.005 250);
+  --secondary: oklch(0.22 0.035 260);
+  --secondary-foreground: oklch(0.95 0.01 250);
+  --muted: oklch(0.22 0.035 260);
+  --muted-foreground: oklch(0.65 0.025 255);
+  --accent: oklch(0.22 0.035 260);
+  --accent-foreground: oklch(0.95 0.01 250);
+  --destructive: oklch(0.6 0.22 25);
+  --border: oklch(0.25 0.025 260);
+  --input: oklch(0.22 0.03 260);
+  --ring: oklch(0.65 0.2 255);
+  --success: oklch(0.7 0.18 145);
+  --warning: oklch(0.75 0.17 70);
+  --chart-1: oklch(0.65 0.2 255);
+  --chart-2: oklch(0.7 0.18 145);
+  --chart-3: oklch(0.75 0.17 70);
+  --chart-4: oklch(0.6 0.22 25);
+  --chart-5: oklch(0.65 0.24 300);
+  --sidebar: oklch(0.15 0.03 265);
+  --sidebar-foreground: oklch(0.95 0.01 250);
+  --sidebar-primary: oklch(0.65 0.2 255);
+  --sidebar-primary-foreground: oklch(0.98 0.005 250);
+  --sidebar-accent: oklch(0.22 0.035 260);
+  --sidebar-accent-foreground: oklch(0.95 0.01 250);
+  --sidebar-border: oklch(0.25 0.025 260);
+  --sidebar-ring: oklch(0.65 0.2 255);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    letter-spacing: -0.011em;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better focus styles */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Premium heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+
+  /* Monospace numbers for data */
+  .font-mono {
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer components {
+  /* Premium card hover effect */
+  .card-hover {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .card-hover:hover {
+    @apply shadow-lg shadow-black/5 -translate-y-0.5;
+  }
+
+  /* Gradient text for branding */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent;
+  }
+
+  /* Smooth badge transitions */
+  .badge-smooth {
+    @apply transition-colors duration-150;
+  }
+
+  /* Stats number styling */
+  .stat-number {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Glass effect for cards */
+  .glass {
+    @apply backdrop-blur-sm bg-card/80;
+  }
+
+  /* Subtle glow effect */
+  .glow-sm {
+    box-shadow: 0 0 20px -5px oklch(0.65 0.2 255 / 0.15);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 30px -5px oklch(0.65 0.2 255 / 0.25);
+  }
+
+  /* Smooth progress bar */
+  .progress-smooth [data-state="complete"],
+  .progress-smooth [data-state="indeterminate"] > div {
+    @apply transition-all duration-500 ease-out;
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-in {
+    animation: animate-in 0.2s ease-out;
+  }
+
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Fade in up animation */
+  .fade-in-up {
+    animation: fade-in-up 0.4s ease-out;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Stagger children animations */
+  .stagger-children > * {
+    animation: fade-in-up 0.4s ease-out backwards;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+}
