@@ -4,12 +4,20 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { JournalEntry, JournalEntryInsert, JournalEntryUpdate } from "@/types/database";
 
+export type DayStats = {
+  date: string;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  losses: number;
+};
+
 export async function getJournalEntries() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "Not authenticated", data: null };
+    return { error: "Not authenticated", data: null, stats: null };
   }
 
   const { data, error } = await supabase
@@ -19,10 +27,53 @@ export async function getJournalEntries() {
     .order("date", { ascending: false });
 
   if (error) {
-    return { error: error.message, data: null };
+    return { error: error.message, data: null, stats: null };
   }
 
-  return { error: null, data: data as JournalEntry[] };
+  // Get unique dates from journal entries
+  const dates = [...new Set((data as JournalEntry[]).map(e => e.date))];
+
+  // Fetch trading stats for those dates
+  const statsMap: Record<string, DayStats> = {};
+
+  if (dates.length > 0) {
+    // Get sessions for these dates
+    const { data: sessions } = await supabase
+      .from("sessions")
+      .select("id, date")
+      .eq("user_id", user.id)
+      .in("date", dates);
+
+    if (sessions && sessions.length > 0) {
+      const sessionIds = sessions.map(s => s.id);
+
+      // Get trades for these sessions
+      const { data: trades } = await supabase
+        .from("trades")
+        .select("session_id, result, pnl")
+        .in("session_id", sessionIds);
+
+      if (trades) {
+        // Map session_id to date
+        const sessionDateMap: Record<string, string> = {};
+        sessions.forEach(s => { sessionDateMap[s.id] = s.date; });
+
+        // Calculate stats per date
+        trades.forEach(trade => {
+          const date = sessionDateMap[trade.session_id];
+          if (!statsMap[date]) {
+            statsMap[date] = { date, totalPnl: 0, tradeCount: 0, wins: 0, losses: 0 };
+          }
+          statsMap[date].tradeCount++;
+          statsMap[date].totalPnl += trade.pnl || 0;
+          if (trade.result === "win") statsMap[date].wins++;
+          if (trade.result === "loss") statsMap[date].losses++;
+        });
+      }
+    }
+  }
+
+  return { error: null, data: data as JournalEntry[], stats: statsMap };
 }
 
 export async function getJournalEntry(id: string) {

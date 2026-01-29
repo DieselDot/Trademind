@@ -20,14 +20,15 @@ import {
 } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { JournalForm } from "./journal-form";
-import { deleteJournalEntry } from "@/app/(app)/journal/actions";
+import { deleteJournalEntry, type DayStats } from "@/app/(app)/journal/actions";
 import type { JournalEntry } from "@/types/database";
 
 interface JournalListProps {
   entries: JournalEntry[];
+  stats: Record<string, DayStats>;
 }
 
-export function JournalList({ entries }: JournalListProps) {
+export function JournalList({ entries, stats }: JournalListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
@@ -51,6 +52,7 @@ export function JournalList({ entries }: JournalListProps) {
     <div className="space-y-2">
       {entries.map((entry) => {
         const isExpanded = expandedId === entry.id;
+        const dayStats = stats[entry.date];
 
         return (
           <Collapsible
@@ -71,20 +73,54 @@ export function JournalList({ entries }: JournalListProps) {
                       <span className="text-xs text-muted-foreground">📷</span>
                     )}
                   </div>
-                  <svg
-                    className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                  <div className="flex items-center gap-3">
+                    {dayStats && (
+                      <span className={`text-xs font-medium ${dayStats.totalPnl >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {dayStats.totalPnl >= 0 ? "+" : ""}{dayStats.totalPnl.toFixed(2)}
+                      </span>
+                    )}
+                    <svg
+                      className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </button>
               </CollapsibleTrigger>
 
               {/* Expanded content */}
               <CollapsibleContent>
                 <div className="px-4 pb-4 pt-2 border-t space-y-3">
+                  {/* Trading stats for this day */}
+                  {dayStats && (
+                    <div className="flex gap-4 text-xs py-2 px-3 bg-muted/50 rounded-md">
+                      <span>
+                        <span className="text-muted-foreground">P&L:</span>{" "}
+                        <span className={dayStats.totalPnl >= 0 ? "text-green-500" : "text-red-500"}>
+                          {dayStats.totalPnl >= 0 ? "+" : ""}{dayStats.totalPnl.toFixed(2)}
+                        </span>
+                      </span>
+                      <span>
+                        <span className="text-muted-foreground">Trades:</span> {dayStats.tradeCount}
+                      </span>
+                      <span>
+                        <span className="text-muted-foreground">W/L:</span>{" "}
+                        <span className="text-green-500">{dayStats.wins}</span>
+                        <span className="text-muted-foreground">/</span>
+                        <span className="text-red-500">{dayStats.losses}</span>
+                      </span>
+                      {dayStats.tradeCount > 0 && (
+                        <span>
+                          <span className="text-muted-foreground">Win%:</span>{" "}
+                          {((dayStats.wins / dayStats.tradeCount) * 100).toFixed(0)}%
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                     {entry.content}
                   </p>

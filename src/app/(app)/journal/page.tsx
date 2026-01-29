@@ -4,7 +4,7 @@ import { JournalForm } from "@/components/journal/journal-form";
 import { Button } from "@/components/ui/button";
 
 export default async function JournalPage() {
-  const { data: entries, error } = await getJournalEntries();
+  const { data: entries, error, stats } = await getJournalEntries();
 
   if (error) {
     return (
@@ -34,7 +34,7 @@ export default async function JournalPage() {
 
       {/* Journal Entries */}
       {entries && entries.length > 0 ? (
-        <JournalList entries={entries} />
+        <JournalList entries={entries} stats={stats || {}} />
       ) : (
         <div className="text-center py-12 px-4 rounded-lg border border-dashed">
           <h3 className="text-lg font-semibold">No journal entries yet</h3>
