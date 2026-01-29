@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -14,6 +13,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { JournalForm } from "./journal-form";
 import { deleteJournalEntry } from "@/app/(app)/journal/actions";
@@ -37,96 +41,99 @@ export function JournalList({ entries }: JournalListProps) {
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
+      year: "numeric",
     });
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {entries.map((entry) => {
         const isExpanded = expandedId === entry.id;
-        const contentPreview = entry.content.length > 200
-          ? entry.content.substring(0, 200) + "..."
-          : entry.content;
 
         return (
-          <Card key={entry.id} className="card-hover overflow-hidden">
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">
-                    {formatDate(entry.date)}
-                  </p>
-                  <h3 className="text-lg font-semibold mt-1">{entry.title}</h3>
-                </div>
-                <div className="flex gap-2">
-                  <JournalForm entry={entry}>
-                    <Button variant="ghost" size="sm">
-                      Edit
-                    </Button>
-                  </JournalForm>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                        Delete
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete this entry?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete your journal entry.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(entry.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Content */}
-                <div className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {isExpanded ? entry.content : contentPreview}
-                </div>
-
-                {entry.content.length > 200 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setExpandedId(isExpanded ? null : entry.id)}
-                    className="p-0 h-auto text-primary"
+          <Collapsible
+            key={entry.id}
+            open={isExpanded}
+            onOpenChange={(open) => setExpandedId(open ? entry.id : null)}
+          >
+            <div className="border rounded-lg bg-card overflow-hidden">
+              {/* Collapsed header - always visible */}
+              <CollapsibleTrigger asChild>
+                <button className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/50 transition-colors text-left">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      {formatDate(entry.date)}
+                    </span>
+                    <span className="font-medium truncate">{entry.title}</span>
+                    {entry.image_url && (
+                      <span className="text-xs text-muted-foreground">📷</span>
+                    )}
+                  </div>
+                  <svg
+                    className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    {isExpanded ? "Show less" : "Read more"}
-                  </Button>
-                )}
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </CollapsibleTrigger>
 
-                {/* Image */}
-                {entry.image_url && (
-                  <div className="mt-4">
+              {/* Expanded content */}
+              <CollapsibleContent>
+                <div className="px-4 pb-4 pt-2 border-t space-y-3">
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {entry.content}
+                  </p>
+
+                  {entry.image_url && (
                     <img
                       src={entry.image_url}
                       alt="Journal attachment"
-                      className="w-full max-h-96 object-contain rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+                      loading="lazy"
+                      className="w-full max-h-64 object-contain rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => window.open(entry.image_url!, "_blank")}
                     />
+                  )}
+
+                  <div className="flex gap-2 pt-2">
+                    <JournalForm entry={entry}>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                    </JournalForm>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                          Delete
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete this entry?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDelete(entry.id)}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
         );
       })}
     </div>
