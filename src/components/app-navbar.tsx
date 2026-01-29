@@ -19,6 +19,7 @@ const navLinks = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/session/new", label: "New Session" },
   { href: "/history", label: "History" },
+  { href: "/journal", label: "Journal" },
   { href: "/rules", label: "Rules" },
 ];
 
@@ -98,6 +99,9 @@ export function AppNavbar({ user }: { user: User }) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="md:hidden">
                 <Link href="/history">History</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="md:hidden">
+                <Link href="/journal">Journal</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="md:hidden">
                 <Link href="/rules">Rules</Link>

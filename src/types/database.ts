@@ -187,6 +187,38 @@ export type Database = {
           created_at?: string
         }
       }
+      journal_entries: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          content: string
+          image_url: string | null
+          date: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          content: string
+          image_url?: string | null
+          date?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          content?: string
+          image_url?: string | null
+          date?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -240,6 +272,7 @@ export type Rule = Database['public']['Tables']['rules']['Row']
 export type Session = Database['public']['Tables']['sessions']['Row']
 export type Trade = Database['public']['Tables']['trades']['Row']
 export type Break = Database['public']['Tables']['breaks']['Row']
+export type JournalEntry = Database['public']['Tables']['journal_entries']['Row']
 
 // Insert types
 export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
@@ -247,6 +280,7 @@ export type RuleInsert = Database['public']['Tables']['rules']['Insert']
 export type SessionInsert = Database['public']['Tables']['sessions']['Insert']
 export type TradeInsert = Database['public']['Tables']['trades']['Insert']
 export type BreakInsert = Database['public']['Tables']['breaks']['Insert']
+export type JournalEntryInsert = Database['public']['Tables']['journal_entries']['Insert']
 
 // Update types
 export type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
@@ -254,3 +288,4 @@ export type RuleUpdate = Database['public']['Tables']['rules']['Update']
 export type SessionUpdate = Database['public']['Tables']['sessions']['Update']
 export type TradeUpdate = Database['public']['Tables']['trades']['Update']
 export type BreakUpdate = Database['public']['Tables']['breaks']['Update']
+export type JournalEntryUpdate = Database['public']['Tables']['journal_entries']['Update']
